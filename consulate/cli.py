@@ -3,8 +3,8 @@
 import argparse
 import base64
 import json
-import sys
 import os
+import sys
 try:
     import urlparse
 except ImportError:
@@ -286,12 +286,28 @@ def kv_backup(consul, args):
         else:
             records = [(k, f, base64.b64encode(v) if v else v)
                        for k, f, v in records]
+
+    # Encode binary data as base64 for JSON encoder
+    KEY=0
+    FLAGS=1
+    VALUE=2
+    VALUETYPE=3
+    cleaned_records = []
+    for r in records:
+        if r[VALUETYPE] == 'binary':
+            # If the data is binary, we want to encode as base64 for the json encoder to handle
+            v = base64.b64encode(r[VALUE])
+        else:
+            v = r[VALUE]
+        r = (r[KEY], r[FLAGS], v, r[VALUETYPE])
+        cleaned_records.append(r)
+
     try:
         if args.pretty:
-            handle.write(json.dumps(records, sort_keys=True, indent=2,
+            handle.write(json.dumps(cleaned_records, sort_keys=True, indent=2,
                                     separators=(',', ': ')) + '\n')
         else:
-            handle.write(json.dumps(records) + '\n')
+            handle.write(json.dumps(cleaned_records) + '\n')
     except exceptions.ConnectionError:
         connection_error()
 
@@ -375,23 +391,32 @@ def kv_restore(consul, args):
     :param argparser.namespace args: The cli args
 
     """
+    KEY=0
+    FLAGS=1
+    VALUE=2
+    VALUETYPE=3
+
     handle = open(args.file, 'r') if args.file else sys.stdin
     data = json.load(handle)
     for row in data:
+        if row[VALUE] is not None:
+            if row[VALUETYPE] == 'binary':
+                row[VALUE] = base64.b64decode(row[VALUE])
+
         if isinstance(row, dict):
             # translate raw api export to internal representation
             if row['Value'] is not None:
                 row['Value'] = base64.b64decode(row['Value'])
             row = [row['Key'], row['Flags'], row['Value']]
 
-        if args.base64 and row[2] is not None:
-            row[2] = base64.b64decode(row[2])
+        if args.base64 and row[VALUE] is not None:
+            row[VALUE] = base64.b64decode(row[VALUE])
 
         # Here's an awesome thing to make things work
         if not utils.PYTHON3 and isinstance(row[2], unicode):
-            row[2] = row[2].encode('utf-8')
+            row[VALUE] = row[VALUE].encode('utf-8')
         try:
-            consul.kv.set_record(row[0], row[1], row[2], not args.no_replace)
+            consul.kv.set_record(row[KEY], row[FLAGS], row[VALUE], not args.no_replace)
         except exceptions.ConnectionError:
             connection_error()
 

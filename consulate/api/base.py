@@ -152,8 +152,9 @@ class Response(object):
                             if isinstance(row['Value'], bytes):
                                 try:
                                     row['Value'] = row['Value'].decode('utf-8')
+                                    row['ValueType'] = 'utf-8'
                                 except UnicodeDecodeError:
-                                    pass
+                                    row['ValueType'] = 'binary'
                         except TypeError:
                             pass
             if isinstance(value, list) and len(value) == 1:

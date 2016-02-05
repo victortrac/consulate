@@ -18,13 +18,14 @@ SCHEME = consulate.DEFAULT_SCHEME
 VERSION = consulate.VERSION
 
 ALL_DATA = (b'[{"CreateIndex":643,"ModifyIndex":643,"LockIndex":0,"Key":"bar",'
-            b'"Flags":0,"Value":"YmF6"},{"CreateIndex":669,"ModifyIndex":669,"'
-            b'LockIndex":0,"Key":"baz","Flags":0,"Value":"cXV4"},{"CreateIndex'
+            b'"Flags":0,"Value":"YmF6","ValueType":"utf-8"},{"CreateIndex":669,"ModifyIndex":669,"'
+            b'LockIndex":0,"Key":"baz","Flags":0,"Value":"cXV4","ValueType":"utf-8"},{"CreateIndex'
             b'":666,"ModifyIndex":666,"LockIndex":0,"Key":"corgie","Flags":128'
-            b',"Value":"ZG9n"},{"CreateIndex":642,"ModifyIndex":642,"LockIndex'
-            b'":0,"Key":"foo","Flags":0,"Value":"YmFy"},{"CreateIndex":644,"Mo'
+            b',"Value":"ZG9n","ValueType":"utf-8"},{"CreateIndex":642,"ModifyIndex":642,"LockIndex'
+            b'":0,"Key":"foo","Flags":0,"Value":"YmFy","ValueType":"utf-8"},{"CreateIndex":644,"Mo'
             b'difyIndex":644,"LockIndex":0,"Key":"quz","Flags":0,"Value":"dHJ1'
-            b'ZQ=="}]')
+            b'ZQ==","ValueType":"utf-8"},{"CreateIndex":645,"ModifyIndex":645,"LockIndex":0,"Key":'
+            b'"binary","Flags":0,"Value":"YSYhwoc=","ValueType":"binary"}]')
 
 ALL_ITEMS = [{
     'CreateIndex': 643,
@@ -32,35 +33,48 @@ ALL_ITEMS = [{
     'Key': 'bar',
     'LockIndex': 0,
     'ModifyIndex': 643,
-    'Value': 'baz'
+    'Value': 'baz',
+    'ValueType': 'utf-8'
 }, {
     'CreateIndex': 669,
     'Flags': 0,
     'Key': 'baz',
     'LockIndex': 0,
     'ModifyIndex': 669,
-    'Value': 'qux'
+    'Value': 'qux',
+    'ValueType': 'utf-8'
 }, {
     'CreateIndex': 666,
     'Flags': 128,
     'Key': 'corgie',
     'LockIndex': 0,
     'ModifyIndex': 666,
-    'Value': 'dog'
+    'Value': 'dog',
+    'ValueType': 'utf-8'
 }, {
     'CreateIndex': 642,
     'Flags': 0,
     'Key': 'foo',
     'LockIndex': 0,
     'ModifyIndex': 642,
-    'Value': 'bar'
+    'Value': 'bar',
+    'ValueType': 'utf-8'
 }, {
     'CreateIndex': 644,
     'Flags': 0,
     'Key': 'quz',
     'LockIndex': 0,
     'ModifyIndex': 644,
-    'Value': 'true'
+    'Value': 'true',
+    'ValueType': 'utf-8'
+}, {
+    'CreateIndex': 645,
+    'Flags': 0,
+    'Key': 'binary',
+    'LockIndex': 0,
+    'ModifyIndex': 645,
+    'Value': 'a&!\x87',
+    'ValueType': 'binary'
 }]
 
 
